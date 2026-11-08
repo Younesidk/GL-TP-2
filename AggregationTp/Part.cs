@@ -1,30 +1,71 @@
 ﻿namespace AggregationTp;
 
+/// <summary>
+/// A replacement part. It lives independently of any Repair (aggregation):
+/// it keeps its own inventory balance (StockQuantity) whether or not a repair uses it.
+/// </summary>
 public class Part
 {
-    public int Reference { get; private set; }
-    public string Name { get; private set; }
-    public int Quantity { get; private set; }
-    public int StockQuantity { get; private set; }
-    public double Price { get; private set; }
+    private int _ref;
+    private string _name;
+    private int _quantity;
+    private int _stockQuantity;
+    private double _price;
+
+    public Part(int reference, string name, int quantity, double price)
+        : this(reference, name, quantity, 0, price)
+    {
+    }
 
     public Part(int reference, string name, int quantity, int stockQuantity, double price)
     {
-        Reference = reference;
-        Name = name;
-        Quantity = quantity;
-        StockQuantity = stockQuantity;
-        Price = price;
+        _ref = reference;
+        _name = name;
+        _quantity = quantity;
+        _stockQuantity = stockQuantity;
+        _price = price;
     }
 
+    // Getters / setters
+    public int Ref
+    {
+        get => _ref;
+        set => _ref = value;
+    }
+
+    public string Name
+    {
+        get => _name;
+        set => _name = value;
+    }
+
+    public int Quantity
+    {
+        get => _quantity;
+        set => _quantity = value;
+    }
+
+    public int StockQuantity
+    {
+        get => _stockQuantity;
+        set => _stockQuantity = value;
+    }
+
+    public double Price
+    {
+        get => _price;
+        set => _price = value;
+    }
+
+    /// <summary>Adds the given quantity to the part's available inventory.</summary>
     public void Restock(int quantity)
     {
-        Quantity += quantity;
+        _stockQuantity += quantity;
     }
 
-    public double CalculatePartAmount() =>
-        Price * Quantity;
+    /// <summary>partAmount = quantity × price</summary>
+    public double CalculatePartAmount() => _quantity * _price;
 
     public override string ToString() =>
-        $"Part {{ Reference = {Reference}, Name = '{Name}', Quantity = {Quantity}, StockQuantity = {StockQuantity}, Price = {Price} }}";
+        $"Part {{ Ref = {_ref}, Name = '{_name}', Quantity = {_quantity}, StockQuantity = {_stockQuantity}, Price = {_price:F2}, Amount = {CalculatePartAmount():F2} }}";
 }
